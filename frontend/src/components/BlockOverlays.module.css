@@ -1,0 +1,66 @@
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+.box {
+  position: absolute;
+  border: 1.25px solid var(--overlay-line);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+  pointer-events: auto;
+}
+
+.box:hover,
+.box:focus-visible {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: var(--accent);
+  outline: none;
+}
+
+.box.selected {
+  border: 2px solid var(--highlight);
+  background: color-mix(in srgb, var(--highlight) 16%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--highlight) 22%, transparent);
+}
+
+.tag {
+  position: absolute;
+  top: -14px;
+  left: -1px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper);
+  padding: 0 3px;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.box:hover .tag,
+.box:focus-visible .tag,
+.box.selected .tag {
+  opacity: 1;
+}
+
+/* Restrained per-type accents */
+.tTitle { border-color: #b08d57; }
+.tHeading { border-color: #a4762e; border-left-width: 3px; }
+.tParagraph { border-color: #7a8699; }
+.tList { border-color: #6f9b7a; }
+.tTable { border-style: dashed; border-color: #8c7ba9; }
+.tFigure { border-style: dashed; border-color: #9b6f6f; }
+.tCaption { border-color: #9b8f6f; }
+.tHeader { border-style: dotted; border-color: #8aa; }
+.tFooter { border-style: dotted; border-color: #8aa; }
+.tPageNumber { border-style: dotted; border-color: #99a; }
+.tUnknown { border-style: dashed; border-color: #777; }
+
+@media (prefers-reduced-motion: reduce) {
+  .box { transition: none; }
+}

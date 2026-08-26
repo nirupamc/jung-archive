@@ -1,0 +1,91 @@
+..............................F......................................... [ 24%]
+Windows fatal exception: access violation
+
+Current thread 0x00004204 (most recent call first):
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\torch\storage.py", line 471 in __getitem__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\transformers\core_model_loading.py", line 1219 in _materialize_copy
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\transformers\core_model_loading.py", line 1243 in _job
+  File "C:\Python\Lib\concurrent\futures\thread.py", line 58 in run
+  File "C:\Python\Lib\concurrent\futures\thread.py", line 83 in _worker
+  File "C:\Python\Lib\threading.py", line 975 in run
+  File "C:\Python\Lib\threading.py", line 1038 in _bootstrap_inner
+  File "C:\Python\Lib\threading.py", line 995 in _bootstrap
+
+Thread 0x00004704 (most recent call first):
+  File "C:\Python\Lib\threading.py", line 324 in wait
+  File "C:\Python\Lib\threading.py", line 622 in wait
+  File "C:\Python\Lib\threading.py", line 1392 in run
+  File "C:\Python\Lib\threading.py", line 1038 in _bootstrap_inner
+  File "C:\Python\Lib\threading.py", line 995 in _bootstrap
+
+Thread 0x00001b78 (most recent call first):
+  File "C:\Python\Lib\threading.py", line 324 in wait
+  File "C:\Python\Lib\threading.py", line 622 in wait
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\tqdm\_monitor.py", line 69 in run
+  File "C:\Python\Lib\threading.py", line 1038 in _bootstrap_inner
+  File "C:\Python\Lib\threading.py", line 995 in _bootstrap
+
+Thread 0x00002990 (most recent call first):
+  File "C:\Python\Lib\threading.py", line 324 in wait
+  File "C:\Python\Lib\threading.py", line 622 in wait
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\tqdm\_monitor.py", line 69 in run
+  File "C:\Python\Lib\threading.py", line 1038 in _bootstrap_inner
+  File "C:\Python\Lib\threading.py", line 995 in _bootstrap
+
+Thread 0x00004218 (most recent call first):
+  File "C:\Python\Lib\threading.py", line 320 in wait
+  File "C:\Python\Lib\threading.py", line 622 in wait
+  File "C:\Python\Lib\threading.py", line 962 in start
+  File "C:\Python\Lib\concurrent\futures\thread.py", line 199 in _adjust_thread_count
+  File "C:\Python\Lib\concurrent\futures\thread.py", line 176 in submit
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\transformers\core_model_loading.py", line 1246 in spawn_materialize
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\transformers\core_model_loading.py", line 1694 in convert_and_load_state_dict_in_model
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\transformers\modeling_utils.py", line 4482 in _load_pretrained_model
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\transformers\modeling_utils.py", line 4348 in from_pretrained
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\transformers\models\auto\auto_factory.py", line 402 in from_pretrained
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\base\modules\transformer.py", line 2333 in _load_model
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\base\modules\transformer.py", line 847 in __init__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\util\decorators.py", line 92 in wrapper
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\base\modules\transformer.py", line 2631 in load
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\base\model.py", line 1298 in _load_config_modules
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\base\model.py", line 1081 in _load_modules
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\base\model.py", line 236 in __init__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\sentence_transformer\model.py", line 194 in __init__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\sentence_transformers\util\decorators.py", line 46 in wrapper
+  File "D:\protofolo projectzzz\jung-archive\src\jung_archive\embedding\provider.py", line 55 in _ensure_model
+  File "D:\protofolo projectzzz\jung-archive\src\jung_archive\embedding\provider.py", line 63 in embed
+  File "D:\protofolo projectzzz\jung-archive\src\jung_archive\indexing\vector_index.py", line 106 in index_chunks
+  File "D:\protofolo projectzzz\jung-archive\tests\test_embedding_index.py", line 170 in test_cold_provider_records_real_dimension
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\python.py", line 167 in pytest_pyfunc_call
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\python.py", line 1707 in runtest
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\runner.py", line 184 in pytest_runtest_call
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\runner.py", line 250 in <lambda>
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\runner.py", line 361 in from_call
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\runner.py", line 249 in call_and_report
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\runner.py", line 139 in runtestprotocol
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\runner.py", line 118 in pytest_runtest_protocol
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\main.py", line 408 in pytest_runtestloop
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\main.py", line 384 in _main
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\main.py", line 330 in wrap_session
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\main.py", line 377 in pytest_cmdline_main
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\config\__init__.py", line 229 in _main
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\_pytest\config\__init__.py", line 253 in _console_main
+  File "D:\protofolo projectzzz\jung-archive\.venv\Lib\site-packages\pytest\__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+................

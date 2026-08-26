@@ -1,0 +1,14 @@
+{
+  "format_version": "index-state-1",
+  "documents": {
+    "381d2da4b68e": {
+      "source_sha256": "cc6a34980a755cd64dafe847cb5fe168e46bf56b089c4f75e87351c3372c8daf",
+      "chunking_config_version": "chunking-config-1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dimension": 384,
+      "normalized": true,
+      "index_schema_version": "index-schema-1",
+      "chunk_count": 263
+    }
+  }
+}

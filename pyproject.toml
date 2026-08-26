@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jung-archive"
+version = "0.1.0"
+description = "Document Intelligence Core for Jung Archive"
+requires-python = ">=3.10"
+dependencies = [
+    "PyMuPDF>=1.23",
+    "pydantic>=2.0",
+    "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+ocr = ["pytesseract>=0.3"]
+rerank = ["sentence-transformers>=3.0", "torch>=2.0"]
+api = ["fastapi>=0.110", "uvicorn>=0.29", "chromadb>=1.0", "rank-bm25>=0.2.2"]
+test = ["pytest>=7.0", "pytest-timeout>=2.0", "chromadb>=1.0", "rank-bm25>=0.2.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

@@ -1,0 +1,108 @@
+:root {
+  /* graphite workspace / warm cream surfaces */
+  --bg: #17191c;
+  --bg-raised: #1e2126;
+  --bg-sunken: #121316;
+  --paper: #f3ecdd;
+  --paper-edge: #d8cfba;
+  --ink: #2a2620;
+  --ink-soft: #6b6353;
+  --panel: #22252a;
+  --panel-edge: #31353c;
+  --text: #d9d4c8;
+  --text-dim: #8b8778;
+  --accent: #c8963e;          /* annotation amber */
+  --highlight: #d95d39;       /* trace highlight */
+  --ok: #7ba05b;
+  --danger: #b8524a;
+  --overlay-line: rgba(200, 150, 62, 0.55);
+  --font-mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #ece7db;
+    --bg-raised: #f5f1e8;
+    --bg-sunken: #ded7c6;
+    --panel: #f1ece0;
+    --panel-edge: #cfc7b4;
+    --text: #33302a;
+    --text-dim: #6f6a5d;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-size: 14px;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--accent);
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Shared viewer states (used by PdfViewer) */
+.pdfViewerScroll {
+  position: relative;
+  overflow: auto;
+  background: var(--bg-sunken);
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  display: flex; /* stage uses margin:auto so it centers AND scrolls */
+}
+
+.pdfStage {
+  position: relative;
+  margin: auto; /* centers in both axes; collapses when content overflows */
+  flex: none;
+  background: var(--paper);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--paper-edge);
+}
+
+.viewerLoading,
+.viewerError {
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  padding: 24px;
+}
+
+.viewerError {
+  color: var(--danger);
+}

@@ -1,0 +1,23 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.table th, .table td {
+  text-align: left;
+  border-bottom: 1px solid var(--panel-edge);
+  padding: 3px 10px;
+}
+
+.table thead th {
+  color: var(--text-dim);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 9px;
+}
+
+.num { color: var(--accent); }

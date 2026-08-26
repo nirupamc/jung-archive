@@ -1,0 +1,619 @@
+{
+  "meta": {
+    "dataset_version": "undiscovered-self-benchmark-1",
+    "chunking_config_version": "chunking-config-1",
+    "document_sha256": {
+      "381d2da4b68e": "cc6a34980a755cd64dafe847cb5fe168e46bf56b089c4f75e87351c3372c8daf"
+    },
+    "created": "2026-08-25T16:15:57+00:00",
+    "ground_truth_method": "manual source inspection of The Undiscovered Self PDF and chunk artifacts; never derived from the retriever under test"
+  },
+  "items": [
+    {
+      "id": "q001_mass_mindedness",
+      "question": "mass-mindedness",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00035",
+        "381d2da4b68e-c00045",
+        "381d2da4b68e-c00051"
+      ],
+      "relevant_page_numbers": [
+        22,
+        23,
+        26,
+        28
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Defining section opening (c00035) and core passages on the stultification/moral irresponsibility of mass-mindedness.",
+      "tags": [
+        "exact",
+        "terminology"
+      ]
+    },
+    {
+      "id": "q002_self_knowledge",
+      "question": "self-knowledge",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00011",
+        "381d2da4b68e-c00012",
+        "381d2da4b68e-c00166",
+        "381d2da4b68e-c00201"
+      ],
+      "relevant_page_numbers": [
+        13,
+        72,
+        84
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Section-defining passages: people measure self-knowledge by the average person (c00011/12); rigorous self-examination (c00166); meaning of self-knowledge (c00201).",
+      "tags": [
+        "exact",
+        "terminology"
+      ]
+    },
+    {
+      "id": "q003_metamorphosis_gods",
+      "question": "What does Jung mean by a 'metamorphosis of the gods'?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00208"
+      ],
+      "relevant_page_numbers": [
+        87
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": "A transformation of fundamental principles and symbols, expression of the changing unconscious man within us.",
+      "notes": "c00208 contains the only explicit 'metamorphosis of the gods' passage: change of fundamental principles and symbols driven by the unconscious man within us.",
+      "tags": [
+        "exact",
+        "conceptual"
+      ]
+    },
+    {
+      "id": "q004_yucca_moth",
+      "question": "yucca moth",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00127",
+        "381d2da4b68e-c00128"
+      ],
+      "relevant_page_numbers": [
+        57,
+        58
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Illustrative symbiosis example; both chunks carry the example.",
+      "tags": [
+        "exact",
+        "tricky"
+      ]
+    },
+    {
+      "id": "q005_iron_curtain_split",
+      "question": "What split is symbolized by the 'Iron Curtain'?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00005",
+        "381d2da4b68e-c00121"
+      ],
+      "relevant_page_numbers": [
+        11,
+        55
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "c00005 raises the symbolic split (p11); c00121 states the barbed-wire line runs through the psyche of modern man (p55).",
+      "tags": [
+        "exact",
+        "cross-page"
+      ]
+    },
+    {
+      "id": "q006_lose_independence",
+      "question": "Why does the individual lose independence in a mass society?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00029",
+        "381d2da4b68e-c00030",
+        "381d2da4b68e-c00032",
+        "381d2da4b68e-c00100"
+      ],
+      "relevant_page_numbers": [
+        19,
+        20,
+        48
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Individual becomes an abstract number / statistical nullity (c00029, c00032); de-individualized society succumbs to the dictator - a million zeros add up to nothing (c00100); crowd size makes the individual negligible (c00030).",
+      "tags": [
+        "semantic"
+      ]
+    },
+    {
+      "id": "q007_protection_from_mass",
+      "question": "What protects an individual from being absorbed into the psychology of the mass?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00036",
+        "381d2da4b68e-c00103",
+        "381d2da4b68e-c00111",
+        "381d2da4b68e-c00164"
+      ],
+      "relevant_page_numbers": [
+        23,
+        49,
+        52,
+        71
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Religious standpoint enables judgment (c00036); individual relation to God as shield (c00103); resistance through individuality as organized as the mass (c00111); certainty keeping one from dissolving in the crowd (c00164).",
+      "tags": [
+        "semantic",
+        "conceptual"
+      ]
+    },
+    {
+      "id": "q008_fear_of_unconscious",
+      "question": "How does Jung describe the fear of the unconscious psyche?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00088",
+        "381d2da4b68e-c00098"
+      ],
+      "relevant_page_numbers": [
+        44,
+        47
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Fear impedes self-knowledge and is the gravest obstacle to psychology (c00088); natural cowardice of most men (c00098).",
+      "tags": [
+        "semantic"
+      ]
+    },
+    {
+      "id": "q009_statistics_vs_understanding",
+      "question": "Why is statistical science a problem for understanding the individual?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00012",
+        "381d2da4b68e-c00017",
+        "381d2da4b68e-c00020",
+        "381d2da4b68e-c00036"
+      ],
+      "relevant_page_numbers": [
+        13,
+        15,
+        16,
+        23
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Statistical theories abolish exceptions (c00012); average-unit anthropology removes paramount individual features (c00017); individual judged a repeating unit (c00020); statistical-only reality makes judgment impossible (c00036).",
+      "tags": [
+        "semantic",
+        "conceptual"
+      ]
+    },
+    {
+      "id": "q010_band_together",
+      "question": "What happens when people band together into groups and organizations?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00100"
+      ],
+      "relevant_page_numbers": [
+        48
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Banding together extinguishes individual personality and makes society succumb to a dictator; a million zeros do not add up to one.",
+      "tags": [
+        "semantic"
+      ]
+    },
+    {
+      "id": "q011_propaganda_eastern_europe",
+      "question": "What did Jung observe about propaganda in Eastern Europe?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00056",
+        "381d2da4b68e-c00057"
+      ],
+      "relevant_page_numbers": [
+        29,
+        30
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Communal propaganda's superficial effect shown by recent events in Eastern Europe; footnote added January 1957.",
+      "tags": [
+        "section"
+      ]
+    },
+    {
+      "id": "q012_churches_mass_action",
+      "question": "According to Jung, how do the Churches use mass action?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00102"
+      ],
+      "relevant_page_numbers": [
+        49
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Churches avail themselves of mass action to cast out the devil with Beelzebub despite caring for the individual soul.",
+      "tags": [
+        "section"
+      ]
+    },
+    {
+      "id": "q013_two_edged_weapon",
+      "question": "What does Jung call a two-edged weapon and why?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00056"
+      ],
+      "relevant_page_numbers": [
+        29
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "'[An] indispensable aid in the organization of masses and is therefore a two-edged weapon' (c00056; value of community depends on the spiritual and moral stature of individuals).",
+      "tags": [
+        "semantic"
+      ]
+    },
+    {
+      "id": "q014_recognition_of_shadow",
+      "question": "What does recognition of the shadow lead to?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00196"
+      ],
+      "relevant_page_numbers": [
+        82
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": "Modesty to acknowledge imperfection; basis of human relationships.",
+      "notes": "Leads to the modesty needed to acknowledge imperfection, the ground of real human relationships.",
+      "tags": [
+        "conceptual"
+      ]
+    },
+    {
+      "id": "q015_projection_of_evil",
+      "question": "Why does Jung think people project evil onto others?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00178",
+        "381d2da4b68e-c00184"
+      ],
+      "relevant_page_numbers": [
+        76,
+        78
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "We prefer to localize evil in individual criminals while washing our hands of it (c00184); the blacker-painted human shadow (c00178).",
+      "tags": [
+        "conceptual"
+      ]
+    },
+    {
+      "id": "q016_nuclear_responsibility",
+      "question": "What does Jung say about nuclear weapons and moral responsibility?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00189",
+        "381d2da4b68e-c00190"
+      ],
+      "relevant_page_numbers": [
+        80
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Reason alone does not suffice against hellish experiments; fear of the evil in one's own bosom checks reason; deciding factor lies with the individual man.",
+      "tags": [
+        "conceptual"
+      ]
+    },
+    {
+      "id": "q017_state_replaces_god",
+      "question": "How does Jung describe the State taking the place of God?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00045",
+        "381d2da4b68e-c00046"
+      ],
+      "relevant_page_numbers": [
+        26
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "The dictator State swallows religious forces; State has taken the place of God; policy exalted to creed, leader becomes a demigod beyond good and evil.",
+      "tags": [
+        "conceptual",
+        "confusable"
+      ]
+    },
+    {
+      "id": "q018_laboratory_psychology",
+      "question": "What is Jung's criticism of laboratory psychology?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00088",
+        "381d2da4b68e-c00089"
+      ],
+      "relevant_page_numbers": [
+        44,
+        45
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "It proceeds abstractly, removing itself from its object, so its findings are remarkably unenlightening for practical purposes.",
+      "tags": [
+        "semantic"
+      ]
+    },
+    {
+      "id": "q019_psyche_cosmic_principle",
+      "question": "In what sense does Jung call the psyche a cosmic principle?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00083"
+      ],
+      "relevant_page_numbers": [
+        42
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Consciousness is a precondition of being, giving the psyche the dignity of a cosmic principle coequal with physical existence.",
+      "tags": [
+        "conceptual",
+        "tricky"
+      ]
+    },
+    {
+      "id": "q020_immortality_crowd",
+      "question": "What argument about immortality does Jung attribute to the crowd?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00029",
+        "381d2da4b68e-c00030"
+      ],
+      "relevant_page_numbers": [
+        19
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "'They have the most convincing reason for not believing in immortality: all those people want to be immortal!' - bigger crowd, more negligible the individual.",
+      "tags": [
+        "confusable"
+      ]
+    },
+    {
+      "id": "q021_western_europe_backbone",
+      "question": "In the chapter on the West, why does Jung think Western Europe may be immune to mass seduction?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00073"
+      ],
+      "relevant_page_numbers": [
+        37
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Western Europe forms the real political backbone, immune because of the outspoken counterposition of the Christian churches.",
+      "tags": [
+        "section"
+      ]
+    },
+    {
+      "id": "q022_word_became_god",
+      "question": "What does Jung say has happened to 'the Word' in Western thought?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00140",
+        "381d2da4b68e-c00141"
+      ],
+      "relevant_page_numbers": [
+        63
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "The word has literally become our god; universal validity severs its original link with the psyche.",
+      "tags": [
+        "section"
+      ]
+    },
+    {
+      "id": "q023_instinct_neglect_medical",
+      "question": "What happens when instinct is violated or neglected?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00155"
+      ],
+      "relevant_page_numbers": [
+        68
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Painful physiological and psychological consequences requiring medical help; unconscious exists as counterbalance to consciousness.",
+      "tags": [
+        "cross-page",
+        "semantic"
+      ]
+    },
+    {
+      "id": "q024_zeitgeist_modern_art",
+      "question": "What role does Jung give to modern art and the unconscious Zeitgeist?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00205"
+      ],
+      "relevant_page_numbers": [
+        86
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Modern art performs psychological education by breaking down previous aesthetic views; the Zeitgeist compensates the conscious attitude and anticipates change.",
+      "tags": [
+        "section",
+        "conceptual"
+      ]
+    },
+    {
+      "id": "q025_christ_mass_meeting",
+      "question": "Does Jung say Christ ever called his disciples at a mass meeting?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00103",
+        "381d2da4b68e-c00104"
+      ],
+      "relevant_page_numbers": [
+        49,
+        50
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Rhetorical question pair spanning the page boundary: c00103 raises it, c00104 continues with the feeding of the five thousand.",
+      "tags": [
+        "confusable"
+      ]
+    },
+    {
+      "id": "q026_chief_factor_mass",
+      "question": "Besides huge agglomerations of people, what chief factor does Jung name for psychological mass formation?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00027",
+        "381d2da4b68e-c00028",
+        "381d2da4b68e-c00029"
+      ],
+      "relevant_page_numbers": [
+        18,
+        19
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "The passage spans the page boundary: c00028 introduces the chief factor, continuing over c00029 (loss of foundations/dignity).",
+      "tags": [
+        "cross-page",
+        "tricky"
+      ]
+    },
+    {
+      "id": "q027_freedom_foundation",
+      "question": "On what foundation do freedom and autonomy of the individual rest?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00041",
+        "381d2da4b68e-c00042"
+      ],
+      "relevant_page_numbers": [
+        24,
+        25
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Not ethical principles or creeds but relation to an extramundane authority acting as counterpoise to the world (spans p24-25).",
+      "tags": [
+        "conceptual",
+        "cross-page"
+      ]
+    },
+    {
+      "id": "q028_religious_advantage",
+      "question": "What advantage does the religious person have for answering crucial questions?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00168"
+      ],
+      "relevant_page_numbers": [
+        73
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Enjoys a great advantage: immediate experience supplies facts where others must rely on proofs.",
+      "tags": [
+        "section"
+      ]
+    },
+    {
+      "id": "q029_history_passes_over",
+      "question": "What does Jung predict history will do to those who resist the inevitable development?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00173",
+        "381d2da4b68e-c00174"
+      ],
+      "relevant_page_numbers": [
+        74,
+        75
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "History will pass over those who feel vocationally bound to resist; still necessary to cling to what is essential and good in tradition.",
+      "tags": [
+        "semantic"
+      ]
+    },
+    {
+      "id": "q030_kairos",
+      "question": "What Greek concept does Jung use for 'the right time'?",
+      "relevant_chunk_ids": [
+        "381d2da4b68e-c00207"
+      ],
+      "relevant_page_numbers": [
+        86
+      ],
+      "relevant_document_ids": [
+        "381d2da4b68e"
+      ],
+      "reference_answer": null,
+      "notes": "Kairos - we are living in what the Greeks called the Kairos, the right time for a metamorphosis of the gods.",
+      "tags": [
+        "exact",
+        "tricky"
+      ]
+    }
+  ]
+}

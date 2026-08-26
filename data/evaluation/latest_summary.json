@@ -1,0 +1,297 @@
+{
+  "run_id": "6a6ddccb6541-dataset",
+  "timestamp": "2026-08-25T17:11:32+00:00",
+  "dataset_version": "undiscovered-self-benchmark-1",
+  "dataset_fingerprint": "3410af1e3a4a82cc",
+  "config": {
+    "run_name": "m6-baseline-final",
+    "modes": [
+      "dense",
+      "bm25",
+      "hybrid",
+      "hybrid_rerank"
+    ],
+    "k_values": [
+      1,
+      3,
+      5,
+      10
+    ],
+    "dense_candidate_k": 30,
+    "bm25_candidate_k": 30,
+    "rrf_k": 60,
+    "fusion_candidate_k": 20,
+    "rerank_top_k": 10,
+    "chunks_dir": "data/chunks",
+    "chroma_dir": "data/chroma",
+    "bm25_state_dir": "data/bm25",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "chunking_config_version": "",
+    "dataset_fingerprint": "3410af1e3a4a82cc",
+    "record_latencies": true,
+    "notes": ""
+  },
+  "total_time_s": 131.6,
+  "avg_query_time_ms": 627.6,
+  "aggregates": [
+    {
+      "mode": "dense",
+      "n_questions": 30,
+      "avg_latency_ms": 518.3,
+      "chunk_metrics": {
+        "hit_at_k": {
+          "1": 0.4333,
+          "3": 0.8,
+          "5": 0.8333,
+          "10": 0.8667
+        },
+        "recall_at_k": {
+          "1": 0.2861,
+          "3": 0.5639,
+          "5": 0.6056,
+          "10": 0.6889
+        },
+        "precision_at_k": {
+          "1": 0.4333,
+          "3": 0.3,
+          "5": 0.2,
+          "10": 0.12
+        },
+        "mrr": 0.602,
+        "ndcg_at_k": {
+          "1": 0.4333,
+          "3": 0.5075,
+          "5": 0.5236,
+          "10": 0.5602
+        }
+      },
+      "page_metrics": {
+        "hit_at_k": {
+          "1": 0.4667,
+          "3": 0.8,
+          "5": 0.9333,
+          "10": 0.9333
+        },
+        "recall_at_k": {
+          "1": 0.3278,
+          "3": 0.6722,
+          "5": 0.775,
+          "10": 0.8389
+        },
+        "precision_at_k": {
+          "1": 0.4667,
+          "3": 0.3444,
+          "5": 0.2467,
+          "10": 0.1475
+        },
+        "mrr": 0.645,
+        "ndcg_at_k": {
+          "1": 0.4667,
+          "3": 0.594,
+          "5": 0.64,
+          "10": 0.6679
+        }
+      }
+    },
+    {
+      "mode": "bm25",
+      "n_questions": 30,
+      "avg_latency_ms": 3.1,
+      "chunk_metrics": {
+        "hit_at_k": {
+          "1": 0.5667,
+          "3": 0.7667,
+          "5": 0.8333,
+          "10": 1.0
+        },
+        "recall_at_k": {
+          "1": 0.4278,
+          "3": 0.6306,
+          "5": 0.7111,
+          "10": 0.8167
+        },
+        "precision_at_k": {
+          "1": 0.5667,
+          "3": 0.3333,
+          "5": 0.2422,
+          "10": 0.16
+        },
+        "mrr": 0.6854,
+        "ndcg_at_k": {
+          "1": 0.5667,
+          "3": 0.6075,
+          "5": 0.6478,
+          "10": 0.6914
+        }
+      },
+      "page_metrics": {
+        "hit_at_k": {
+          "1": 0.6667,
+          "3": 0.8667,
+          "5": 0.8667,
+          "10": 0.9333
+        },
+        "recall_at_k": {
+          "1": 0.5333,
+          "3": 0.7611,
+          "5": 0.8056,
+          "10": 0.8889
+        },
+        "precision_at_k": {
+          "1": 0.6667,
+          "3": 0.3889,
+          "5": 0.2733,
+          "10": 0.1769
+        },
+        "mrr": 0.7648,
+        "ndcg_at_k": {
+          "1": 0.6667,
+          "3": 0.7293,
+          "5": 0.7516,
+          "10": 0.7861
+        }
+      }
+    },
+    {
+      "mode": "hybrid",
+      "n_questions": 30,
+      "avg_latency_ms": 61.6,
+      "chunk_metrics": {
+        "hit_at_k": {
+          "1": 0.5,
+          "3": 0.7667,
+          "5": 0.8,
+          "10": 0.9333
+        },
+        "recall_at_k": {
+          "1": 0.3278,
+          "3": 0.5806,
+          "5": 0.6306,
+          "10": 0.8028
+        },
+        "precision_at_k": {
+          "1": 0.5,
+          "3": 0.3222,
+          "5": 0.2067,
+          "10": 0.1433
+        },
+        "mrr": 0.6545,
+        "ndcg_at_k": {
+          "1": 0.5,
+          "3": 0.5502,
+          "5": 0.5668,
+          "10": 0.6343
+        }
+      },
+      "page_metrics": {
+        "hit_at_k": {
+          "1": 0.6,
+          "3": 0.9,
+          "5": 0.9,
+          "10": 0.9333
+        },
+        "recall_at_k": {
+          "1": 0.3944,
+          "3": 0.7639,
+          "5": 0.7722,
+          "10": 0.8806
+        },
+        "precision_at_k": {
+          "1": 0.6,
+          "3": 0.3889,
+          "5": 0.24,
+          "10": 0.1468
+        },
+        "mrr": 0.7458,
+        "ndcg_at_k": {
+          "1": 0.6,
+          "3": 0.6923,
+          "5": 0.691,
+          "10": 0.734
+        }
+      }
+    },
+    {
+      "mode": "hybrid_rerank",
+      "n_questions": 30,
+      "avg_latency_ms": 1927.6,
+      "chunk_metrics": {
+        "hit_at_k": {
+          "1": 0.7667,
+          "3": 0.9667,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "recall_at_k": {
+          "1": 0.5444,
+          "3": 0.7472,
+          "5": 0.7833,
+          "10": 0.8472
+        },
+        "precision_at_k": {
+          "1": 0.7667,
+          "3": 0.4222,
+          "5": 0.2733,
+          "10": 0.1533
+        },
+        "mrr": 0.8528,
+        "ndcg_at_k": {
+          "1": 0.7667,
+          "3": 0.7533,
+          "5": 0.761,
+          "10": 0.7902
+        }
+      },
+      "page_metrics": {
+        "hit_at_k": {
+          "1": 0.8,
+          "3": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "recall_at_k": {
+          "1": 0.6028,
+          "3": 0.8667,
+          "5": 0.9194,
+          "10": 0.9583
+        },
+        "precision_at_k": {
+          "1": 0.8,
+          "3": 0.4444,
+          "5": 0.3,
+          "10": 0.175
+        },
+        "mrr": 0.8722,
+        "ndcg_at_k": {
+          "1": 0.8,
+          "3": 0.8331,
+          "5": 0.8571,
+          "10": 0.8758
+        }
+      }
+    }
+  ],
+  "failure_counts": {
+    "bm25_only_win": 4,
+    "reranker_improves_rank": 10,
+    "reranker_hurts_rank": 2
+  },
+  "evidence_summary": {
+    "evidence_accuracy_chunk": 0.1843,
+    "evidence_accuracy_page": 0.2528,
+    "evidence_coverage_chunk": 0.7194,
+    "evidence_coverage_page": 0.9056,
+    "questions": 30
+  },
+  "generation_eval": {
+    "status": "NOT_RUN",
+    "note": "generation is outside the current M1-M6 system.",
+    "question_id": "",
+    "reference_answer": null,
+    "generated_answer": null,
+    "citations": [],
+    "faithfulness_score": null,
+    "answer_correctness_score": null
+  }
+}

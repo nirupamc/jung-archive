@@ -1,0 +1,133 @@
+{
+  "documents": [
+    {
+      "path_contains": "Aion PDF.pdf",
+      "title": "Aion (Bookey summary - NOT Jung's original work)",
+      "source_type": "SECONDARY",
+      "index_status": "EXCLUDE",
+      "reason": "Verified third-party Bookey study-guide/summary with app links, not C.G. Jung's authentic text. Must never enter the primary index as Jung-authored material."
+    },
+    {
+      "sha256": "cc6a34980a755cd64dafe847cb5fe168e46bf56b089c4f75e87351c3372c8daf",
+      "path_contains": "Undiscovered Self",
+      "title": "The Undiscovered Self",
+      "author": "Carl Gustav Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Authenticity verified via embedded PDF metadata (title 'The Undiscovered Self', author 'Carl Gustav Jung') and content inspection of first pages; published essay by Jung."
+    },
+    {
+      "sha256": "7aeeb9f497325d03bc5054a882110b25fe53540b9624759129133d9425e7f25b",
+      "path_contains": "Man-And-His-Symbols",
+      "title": "Man and His Symbols",
+      "author": "C. G. Jung (ed.) with M.-L. von Franz, J. L. Henderson, J. Jacobi, A. Jaffé",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata 'Man And His Symbols' / 'Jung,carl G.'; first page confirms Aldus Books edition edited by Jung with von Franz et al. Authentic Jung-edited volume."
+    },
+    {
+      "path_contains": "Modern Man in Search of a Soul",
+      "title": "Modern Man in Search of a Soul",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "First page confirms Routledge Classics edition: 'title: Modern Man in Search of a Soul, author: Jung, C. G.'. Authentic Jung essay collection."
+    },
+    {
+      "path_contains": "Memories, Dreams, Reflections",
+      "title": "Memories, Dreams, Reflections",
+      "author": "Carl Gustav Jung (ed. Aniela Jaffé)",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata 'Memories, Dreams, Reflections' / 'Carl Jung'; the standard Jung/Jaffé autobiographical text."
+    },
+    {
+      "path_contains": "Vol-5-jung-symbols-of-transformation",
+      "title": "Collected Works Vol. 5: Symbols of Transformation",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata confirms Collected Works of C.G. Jung Volume 5 (Read/Fordham/Adler editors, Hull translator). Authentic volume."
+    },
+    {
+      "path_contains": "Vol-6-psychological-types",
+      "title": "Collected Works Vol. 6: Psychological Types",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata confirms Collected Works Volume 6. Authentic volume."
+    },
+    {
+      "path_contains": "Vol-7-two-essays-on-analytical-psychology",
+      "title": "Collected Works Vol. 7: Two Essays on Analytical Psychology",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata confirms Collected Works Volume 7. Authentic volume."
+    },
+    {
+      "path_contains": "vol-8-the-structure-and-dynamics-of-the-psyche",
+      "title": "Collected Works Vol. 8: The Structure and Dynamics of the Psyche",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata confirms Collected Works Volume 8. Authentic volume."
+    },
+    {
+      "path_contains": "2015.185498.The-Archetypes-And-Collective-Unconscious",
+      "title": "Collected Works Vol. 9i: The Archetypes and the Collective Unconscious",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "First page confirms 'THE COLLECTED WORKS OF C. G. JUNG VOLUME 9, PART I' with Read/Fordham/Adler editorship. Authentic volume."
+    },
+    {
+      "path_contains": "vol-12-psychology-and-alchemy",
+      "title": "Collected Works Vol. 12: Psychology and Alchemy",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata confirms Collected Works Volume 12 (Jung/Hull/Adler). Authentic volume."
+    },
+    {
+      "path_contains": "vol-14-Mysterium-Coniunctionis",
+      "title": "Collected Works Vol. 14: Mysterium Coniunctionis",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "First page confirms Bollingen Series 'THE COLLECTED WORKS OF C. G. JUNG VO[LUME 14]'. Embedded author field contains an unrelated watermark email; content inspection confirms authentic volume - included despite the watermarked field, noted here for transparency."
+    },
+    {
+      "path_contains": "Vol-16-the-practice-of-psychotherapy",
+      "title": "Collected Works Vol. 16: The Practice of Psychotherapy",
+      "author": "C. G. Jung",
+      "source_type": "PRIMARY",
+      "index_status": "INCLUDE",
+      "reason": "Embedded metadata confirms Collected Works Volume 16 (Jung/Hull/Adler). Authentic volume."
+    },
+    {
+      "path_contains": "3300.pdf",
+      "title": "Jung's Synchronicity Principle (In a Few Words) - journal article",
+      "author": "Krzysztof Jankowski",
+      "source_type": "SECONDARY",
+      "index_status": "REVIEW",
+      "reason": "Third-party journal article (GESJ: Education Science and Psychology 2020) ABOUT Jung, not by Jung. Not primary material; held for review."
+    },
+    {
+      "path_contains": "preview-9781317710721",
+      "title": "Jung's Answer to Job: A Commentary (publisher preview)",
+      "author": "Paul Bishop",
+      "source_type": "SECONDARY",
+      "index_status": "REVIEW",
+      "reason": "24-page publisher preview sample of a third-party academic commentary (Paul Bishop, Routledge), not primary Jung material. Held for review."
+    },
+    {
+      "path_contains": "jung-a-very-short-introduction",
+      "title": "Jung: A Very Short Introduction",
+      "author": "Anthony Stevens",
+      "source_type": "SECONDARY",
+      "index_status": "INCLUDE",
+      "reason": "OUP Very Short Introduction by Anthony Stevens (embedded metadata confirmed). Authenticated secondary scholarship; indexed in the SECONDARY lane for cross-source retrieval."
+    }
+  ]
+}

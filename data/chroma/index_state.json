@@ -1,0 +1,50 @@
+{
+  "format_version": "index-state-1",
+  "documents": {
+    "381d2da4b68e": {
+      "source_sha256": "cc6a34980a755cd64dafe847cb5fe168e46bf56b089c4f75e87351c3372c8daf",
+      "chunking_config_version": "chunking-config-1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dimension": 384,
+      "normalized": true,
+      "index_schema_version": "index-schema-1",
+      "chunk_count": 211
+    },
+    "158b59f7a945": {
+      "source_sha256": "a5ff4d5515328f95580f7122c11b39416de4b116a33d76d24e4ef60cb8c1bf87",
+      "chunking_config_version": "chunking-config-1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dimension": 384,
+      "normalized": true,
+      "index_schema_version": "index-schema-1",
+      "chunk_count": 1095
+    },
+    "84003444a510": {
+      "source_sha256": "d3bd5abe3e4de6006956e42c69495c7fbe3adc0f366a831bb659448b7b6158b0",
+      "chunking_config_version": "chunking-config-1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dimension": 384,
+      "normalized": true,
+      "index_schema_version": "index-schema-1",
+      "chunk_count": 1819
+    },
+    "79f253dac324": {
+      "source_sha256": "aa76dc896ffc17e6367727d27d779232272d72bc120dbea450b9a0e2a02f78a8",
+      "chunking_config_version": "chunking-config-1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dimension": 384,
+      "normalized": true,
+      "index_schema_version": "index-schema-1",
+      "chunk_count": 329
+    },
+    "183d18f3e973": {
+      "source_sha256": "7aeeb9f497325d03bc5054a882110b25fe53540b9624759129133d9425e7f25b",
+      "chunking_config_version": "chunking-config-1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dimension": 384,
+      "normalized": true,
+      "index_schema_version": "index-schema-1",
+      "chunk_count": 981
+    }
+  }
+}
