@@ -35,35 +35,55 @@ DEFAULT_COLLECTION = "jung_archive"
 #     self._dimensionality = self._persist_data.dimensionality
 # which raises AttributeError: 'dict' object has no attribute 'dimensionality'.
 # ----------------------------------------------------------------------
+def _get_state_dimension(persist_dir: Path) -> Optional[int]:
+    """Read the embedding dimension from index_state.json in *persist_dir*.
+
+    This is the most reliable source because it is written by our own
+    indexing code at chunk-index time.
+    """
+    state_path = persist_dir / "index_state.json"
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            for meta in state.get("documents", {}).values():
+                dim = meta.get("embedding_dimension")
+                if dim is not None and dim > 1:
+                    return int(dim)
+        except Exception:
+            pass
+    return None
+
+
 def _recover_hnsw_dimensionality(segment_dir: Path) -> Optional[int]:
     """Recover the true embedding dimensionality from the on-disk HNSW
     index files.
 
-    hnswlib reads the dimensionality from the persisted index header at
-    load time, so loading with a dummy ``dim`` and reading ``idx.dim``
-    yields the real value regardless of the constructor argument.
+    hnswlib's ``Index.dim`` attribute reflects the constructor argument,
+    **not** the value persisted in the index file, so loading with a
+    dummy ``dim`` cannot discover the real one.  We instead rely on our
+    own ``index_state.json`` which records the dimension at write time.
     """
-    try:
-        import hnswlib
-
-        idx = hnswlib.Index(space="cosine", dim=1)
-        idx.load_index(
-            str(segment_dir),
-            is_persistent_index=True,
-            max_elements=100000,
-        )
-        dim = idx.dim
-        idx.close_file_handles()
-        return int(dim)
-    except Exception:
-        return None
+    return _get_state_dimension(segment_dir.parent)
 
 
-def repair_corrupted_hnsw_pickles(persist_dir: Path) -> int:
-    """Repair Chroma HNSW pickle files that deserialize as plain dicts.
+def repair_corrupted_hnsw_pickles(
+    persist_dir: Path, dimension: Optional[int] = None
+) -> int:
+    """Repair Chroma HNSW pickle files that are corrupted.
 
-    Returns the number of pickle files repaired.  Healthy pickles
-    (proper ``PersistentData`` objects) are left untouched.
+    Handles two failure modes:
+    1. The pickle deserializes as a plain ``dict`` instead of a
+       ``PersistentData`` object (causes
+       ``AttributeError: 'dict' object has no attribute 'dimensionality'``).
+    2. The pickle deserializes as a ``PersistentData`` but has an invalid
+       dimensionality (``None``, ``0``, or ``1`` — the wrong value
+       written by a broken repair pass).
+
+    When *dimension* is provided it overrides the value found in the
+    pickle; otherwise the dimension is read from ``index_state.json``.
+
+    Returns the number of pickle files repaired.  Healthy pickles are
+    left untouched.
     """
     try:
         from chromadb.segment.impl.vector.local_persistent_hnsw import (
@@ -71,6 +91,9 @@ def repair_corrupted_hnsw_pickles(persist_dir: Path) -> int:
         )
     except ImportError:
         return 0
+
+    if dimension is None or dimension <= 1:
+        dimension = _get_state_dimension(persist_dir)
 
     repaired = 0
     for root, _dirs, files in os.walk(str(persist_dir)):
@@ -84,25 +107,37 @@ def repair_corrupted_hnsw_pickles(persist_dir: Path) -> int:
             continue
 
         if isinstance(obj, PersistentData):
-            continue
-        if not isinstance(obj, dict):
+            if obj.dimensionality is not None and obj.dimensionality > 1:
+                continue  # healthy
+            d = {
+                "dimensionality": obj.dimensionality,
+                "total_elements_added": obj.total_elements_added,
+                "id_to_label": obj.id_to_label,
+                "label_to_id": obj.label_to_id,
+                "id_to_seq_id": obj.id_to_seq_id,
+            }
+            if hasattr(obj, "max_seq_id"):
+                d["max_seq_id"] = obj.max_seq_id
+        elif isinstance(obj, dict):
+            d = dict(obj)
+        else:
             continue
 
-        dim = obj.get("dimensionality")
-        if dim is None:
-            dim = _recover_hnsw_dimensionality(Path(root))
-        if dim is None:
+        dim = d.get("dimensionality")
+        if dim is None or dim <= 1:
+            dim = dimension
+        if dim is None or dim <= 1:
             continue
 
         pd = PersistentData(
             dimensionality=dim,
-            total_elements_added=obj.get("total_elements_added", 0),
-            id_to_label=obj.get("id_to_label", {}),
-            label_to_id=obj.get("label_to_id", {}),
-            id_to_seq_id=obj.get("id_to_seq_id", {}),
+            total_elements_added=d.get("total_elements_added", 0),
+            id_to_label=d.get("id_to_label", {}),
+            label_to_id=d.get("label_to_id", {}),
+            id_to_seq_id=d.get("id_to_seq_id", {}),
         )
-        if "max_seq_id" in obj:
-            pd.max_seq_id = obj["max_seq_id"]
+        if "max_seq_id" in d:
+            pd.max_seq_id = d["max_seq_id"]
 
         tmp = path + ".repairing"
         with open(tmp, "wb") as f:
@@ -133,7 +168,9 @@ class VectorIndex:
         import chromadb
 
         self.persist_dir.mkdir(parents=True, exist_ok=True)
-        repair_corrupted_hnsw_pickles(self.persist_dir)
+        repair_corrupted_hnsw_pickles(
+            self.persist_dir, dimension=self.provider.dimension
+        )
         self._client = chromadb.PersistentClient(path=str(self.persist_dir))
         schema_meta = IndexSchemaMeta(
             embedding_model=self.provider.model_name,

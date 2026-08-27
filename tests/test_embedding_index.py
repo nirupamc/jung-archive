@@ -1,4 +1,6 @@
 import json
+import pickle
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -10,8 +12,20 @@ from jung_archive.chunking.artifacts import (
 from jung_archive.chunking.chunker import StructureAwareChunker
 from jung_archive.chunking.validation import require_valid
 from jung_archive.embedding.provider import LocalSentenceTransformerProvider
-from jung_archive.indexing.vector_index import VectorIndex
-from jung_archive.models.chunk import ChunkingConfig
+from jung_archive.indexing.vector_index import (
+    VectorIndex,
+    repair_corrupted_hnsw_pickles,
+)
+from jung_archive.models.chunk import ChunkingConfig, IndexSchemaMeta
+
+try:
+    from chromadb.segment.impl.vector.local_persistent_hnsw import (
+        PersistentData,
+    )
+    _HAS_PERSISTENT_DATA = True
+except ImportError:
+    PersistentData = None
+    _HAS_PERSISTENT_DATA = False
 
 
 @pytest.fixture(scope="module")
@@ -160,6 +174,23 @@ class TestVectorIndex:
         assert int(meta["embedding_dimension"]) == 384
         assert meta["normalized"] in ("True", True)
 
+    def test_collection_schema_meta_returns_typed_model(self, tmp_path):
+        """collection_schema_meta() must return an IndexSchemaMeta, not a raw dict."""
+        from jung_archive.indexing.vector_index import VectorIndex
+        from jung_archive.models.chunk import IndexSchemaMeta
+
+        class _MockProvider:
+            model_name = "test-model"
+            dimension = 128
+            normalized = True
+
+        idx = VectorIndex(_MockProvider(), persist_dir=str(tmp_path / "chroma"))
+        meta = idx.collection_schema_meta()
+        assert isinstance(meta, IndexSchemaMeta)
+        assert meta.embedding_model == "test-model"
+        assert meta.embedding_dimension == 128
+        assert meta.normalized is True
+
     def test_cold_provider_records_real_dimension(self, tmp_path, chunked_doc):
         """Regression: a freshly constructed provider must not record
         dimension 0 in collection metadata."""
@@ -232,3 +263,190 @@ class TestChunkArtifacts:
                     "page_numbers", "heading_path", "token_count",
                     "source_type"):
             assert key in c0
+
+
+@pytest.mark.skipif(not _HAS_PERSISTENT_DATA,
+                    reason="chromadb PersistentData not available")
+class TestHnswRepair:
+    """Regression tests for repair_corrupted_hnsw_pickles."""
+
+    @staticmethod
+    def _write_state(persist_dir: Path, dim: int = 384):
+        state = {
+            "format_version": "index-state-1",
+            "documents": {
+                "doc1": {
+                    "embedding_dimension": dim,
+                    "embedding_model": "test-model",
+                    "chunking_config_version": "chunking-config-1",
+                    "source_sha256": "x",
+                    "chunk_count": 1,
+                }
+            },
+        }
+        persist_dir.mkdir(parents=True, exist_ok=True)
+        (persist_dir / "index_state.json").write_text(
+            json.dumps(state), encoding="utf-8"
+        )
+
+    def test_repair_corrupted_dict_pickle(self, tmp_path):
+        """A pickle that deserializes as a plain dict with dimensionality=None
+        must be reconstructed into a valid PersistentData with dim from state."""
+        persist = tmp_path / "chroma"
+        seg = persist / "segment1"
+        seg.mkdir(parents=True)
+        self._write_state(persist, dim=384)
+
+        corrupted = {
+            "dimensionality": None,
+            "total_elements_added": 10,
+            "max_seq_id": 0,
+            "id_to_label": {"a": 0},
+            "label_to_id": {0: "a"},
+            "id_to_seq_id": {"a": 0},
+        }
+        with open(seg / "index_metadata.pickle", "wb") as f:
+            pickle.dump(corrupted, f)
+
+        n = repair_corrupted_hnsw_pickles(persist)
+        assert n == 1
+
+        with open(seg / "index_metadata.pickle", "rb") as f:
+            obj = pickle.load(f)
+        assert isinstance(obj, PersistentData)
+        assert obj.dimensionality == 384
+        assert obj.total_elements_added == 10
+
+    def test_repair_persistentdata_bad_dimension(self, tmp_path):
+        """A PersistentData with dimensionality=1 (broken repair pass) must
+        be re-repaired with the correct dimension from state."""
+        persist = tmp_path / "chroma"
+        seg = persist / "segment1"
+        seg.mkdir(parents=True)
+        self._write_state(persist, dim=384)
+
+        bad = PersistentData(
+            dimensionality=1,
+            total_elements_added=10,
+            id_to_label={"a": 0},
+            label_to_id={0: "a"},
+            id_to_seq_id={"a": 0},
+        )
+        with open(seg / "index_metadata.pickle", "wb") as f:
+            pickle.dump(bad, f)
+
+        n = repair_corrupted_hnsw_pickles(persist)
+        assert n == 1
+
+        with open(seg / "index_metadata.pickle", "rb") as f:
+            obj = pickle.load(f)
+        assert isinstance(obj, PersistentData)
+        assert obj.dimensionality == 384
+
+    def test_repair_persistentdata_none_dimension(self, tmp_path):
+        """A PersistentData with dimensionality=None must be repaired."""
+        persist = tmp_path / "chroma"
+        seg = persist / "segment1"
+        seg.mkdir(parents=True)
+        self._write_state(persist, dim=384)
+
+        bad = PersistentData(
+            dimensionality=None,
+            total_elements_added=5,
+            id_to_label={"a": 0},
+            label_to_id={0: "a"},
+            id_to_seq_id={"a": 0},
+        )
+        with open(seg / "index_metadata.pickle", "wb") as f:
+            pickle.dump(bad, f)
+
+        n = repair_corrupted_hnsw_pickles(persist)
+        assert n == 1
+
+        with open(seg / "index_metadata.pickle", "rb") as f:
+            obj = pickle.load(f)
+        assert isinstance(obj, PersistentData)
+        assert obj.dimensionality == 384
+
+    def test_repair_healthy_pickle_skipped(self, tmp_path):
+        """A valid PersistentData with correct dimensionality must be skipped."""
+        persist = tmp_path / "chroma"
+        seg = persist / "segment1"
+        seg.mkdir(parents=True)
+        self._write_state(persist, dim=384)
+
+        good = PersistentData(
+            dimensionality=384,
+            total_elements_added=10,
+            id_to_label={"a": 0},
+            label_to_id={0: "a"},
+            id_to_seq_id={"a": 0},
+        )
+        with open(seg / "index_metadata.pickle", "wb") as f:
+            pickle.dump(good, f)
+
+        n = repair_corrupted_hnsw_pickles(persist)
+        assert n == 0
+
+        with open(seg / "index_metadata.pickle", "rb") as f:
+            obj = pickle.load(f)
+        assert isinstance(obj, PersistentData)
+        assert obj.dimensionality == 384
+
+    def test_repair_no_state_no_repair(self, tmp_path):
+        """Without index_state.json the dimension cannot be recovered;
+        the corrupted pickle must be left untouched."""
+        persist = tmp_path / "chroma"
+        seg = persist / "segment1"
+        seg.mkdir(parents=True)
+
+        corrupted = {
+            "dimensionality": None,
+            "total_elements_added": 10,
+            "max_seq_id": 0,
+            "id_to_label": {},
+            "label_to_id": {},
+            "id_to_seq_id": {},
+        }
+        with open(seg / "index_metadata.pickle", "wb") as f:
+            pickle.dump(corrupted, f)
+
+        n = repair_corrupted_hnsw_pickles(persist)
+        assert n == 0
+
+        with open(seg / "index_metadata.pickle", "rb") as f:
+            obj = pickle.load(f)
+        assert isinstance(obj, dict)
+        assert obj["dimensionality"] is None
+
+
+def test_schema_meta_deserialization_from_dict():
+    """IndexSchemaMeta.model_validate must convert a raw dict (as returned
+    by Chroma collection metadata) into a proper typed object."""
+    raw = {
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "embedding_dimension": 384,
+        "normalized": True,
+        "index_schema_version": "index-schema-1",
+        "chunking_config_version": "chunking-config-1",
+        "hnsw:space": "cosine",
+    }
+    meta = IndexSchemaMeta.model_validate(raw)
+    assert isinstance(meta, IndexSchemaMeta)
+    assert meta.embedding_model == "sentence-transformers/all-MiniLM-L6-v2"
+    assert meta.embedding_dimension == 384
+    assert meta.normalized is True
+    assert meta.index_schema_version == "index-schema-1"
+
+
+def test_schema_meta_dimension_mismatch_still_raises():
+    """The typed IndexSchemaMeta must expose embedding_dimension for
+    comparison — a real mismatch must still be detectable."""
+    raw = {
+        "embedding_model": "model-a",
+        "embedding_dimension": 384,
+        "normalized": True,
+    }
+    meta = IndexSchemaMeta.model_validate(raw)
+    assert meta.embedding_dimension == 384
+    assert meta.embedding_dimension != 256

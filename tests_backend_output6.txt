@@ -1,0 +1,12 @@
+Health: 200 {'status': 'ok', 'documents': 7}
+DENSE: 200
+  results: 5 warnings: []
+    chunk=79f253dac324 doc=79f253dac324 title=Jung: A Very Short Introduction
+    chunk=79f253dac324 doc=79f253dac324 title=Jung: A Very Short Introduction
+    chunk=79f253dac324 doc=79f253dac324 title=Jung: A Very Short Introduction
+BM25: 200
+  results: 5 warnings: []
+HYBRID: 200
+  results: 5 warnings: []
+HYBRID_RERANK: 200
+  results: 5 warnings: []

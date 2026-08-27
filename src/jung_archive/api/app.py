@@ -19,6 +19,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from jung_archive.api.schemas import (
+    AskRequest,
+    AskResponse,
     BlockOut,
     ChunkOut,
     CorpusStats,
@@ -235,6 +237,14 @@ def run_evidence(req: EvidenceRequest):
     assembler = EvidenceAssembler(EvidenceConfig(
         max_evidence_tokens=req.max_tokens, max_evidence_items=req.max_items))
     return assembler.assemble(req.question, resp.results)
+
+
+def run_ask(req: AskRequest):
+    from jung_archive.generation import AskService, OpenAICompatibleProvider
+
+    vi, bm25, reranker = get_services()
+    service = AskService(vi, bm25, reranker, OpenAICompatibleProvider())
+    return service.ask(req.query, req.filters, req.generation)
 
 
 # ----------------------------------------------------------------------
@@ -462,6 +472,17 @@ def evidence_assemble(req: EvidenceRequest):
     except Exception as e:
         raise HTTPException(502, f"evidence assembly failed: {e}") from e
     return json.loads(pack.model_dump_json())
+
+
+@app.post("/api/ask")
+def ask(req: AskRequest):
+    if not req.query.strip():
+        raise HTTPException(400, "query must be non-empty")
+    try:
+        response = run_ask(req)
+    except Exception as e:
+        raise HTTPException(502, f"ask failed: {e}") from e
+    return json.loads(response.model_dump_json())
 
 
 # ----------------------------------------------------------------------

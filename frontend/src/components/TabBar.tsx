@@ -5,6 +5,7 @@ import { useWorkspace, type Tab } from "@/state/workspace";
 import styles from "./TabBar.module.css";
 
 const TABS: Array<{ id: Tab; label: string }> = [
+  { id: "ask", label: "ASK" },
   { id: "document", label: "DOCUMENT" },
   { id: "structure", label: "STRUCTURE" },
   { id: "chunks", label: "CHUNKS" },

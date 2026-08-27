@@ -4,6 +4,7 @@ import { WorkspaceProvider, useWorkspace } from "@/state/workspace";
 import LibrarySidebar from "@/components/LibrarySidebar";
 import InspectorPanel from "@/components/InspectorPanel";
 import TabBar from "@/components/TabBar";
+import AskTab from "@/components/tabs/AskTab";
 import DocumentTab from "@/components/tabs/DocumentTab";
 import StructureTab from "@/components/tabs/StructureTab";
 import ChunksTab from "@/components/tabs/ChunksTab";
@@ -80,6 +81,7 @@ function MainPanel() {
       role="tabpanel"
       aria-labelledby={`tab-${state.tab}`}
     >
+      {state.tab === "ask" && <AskTab />}
       {state.tab === "document" && <DocumentTab />}
       {state.tab === "structure" && <StructureTab />}
       {state.tab === "chunks" && <ChunksTab />}

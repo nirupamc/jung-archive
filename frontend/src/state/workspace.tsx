@@ -10,13 +10,14 @@ import {
 } from "react";
 import { api } from "@/lib/api";
 import type {
+  AskResponse,
   DocumentSummary,
   EvidencePack,
   RetrievalMode,
   RetrievalResponse,
 } from "@/lib/types";
 
-export type Tab = "document" | "structure" | "chunks" | "retrieval"
+export type Tab = "ask" | "document" | "structure" | "chunks" | "retrieval"
   | "evaluation" | "graph";
 
 export interface WorkspaceState {
@@ -36,6 +37,9 @@ export interface WorkspaceState {
   evidence: EvidencePack | null;
   evidenceLoading: boolean;
   evidenceError: string | null;
+  ask: import("@/lib/types").AskResponse | null;
+  askLoading: boolean;
+  askError: string | null;
 }
 
 type Action =
@@ -54,7 +58,10 @@ type Action =
   | { type: "retrieval_error"; error: string }
   | { type: "evidence_start" }
   | { type: "evidence_done"; pack: EvidencePack }
-  | { type: "evidence_error"; error: string };
+  | { type: "evidence_error"; error: string }
+  | { type: "ask_start" }
+  | { type: "ask_done"; result: import("@/lib/types").AskResponse }
+  | { type: "ask_error"; error: string };
 
 const initialState: WorkspaceState = {
   documents: null,
@@ -63,7 +70,7 @@ const initialState: WorkspaceState = {
   page: 1,
   selectedBlockIds: [],
   selectedChunkId: null,
-  tab: "document",
+  tab: "ask",
   query: "",
   mode: "hybrid",
   topK: 5,
@@ -73,6 +80,9 @@ const initialState: WorkspaceState = {
   evidence: null,
   evidenceLoading: false,
   evidenceError: null,
+  ask: null,
+  askLoading: false,
+  askError: null,
 };
 
 function reducer(state: WorkspaceState, action: Action): WorkspaceState {
@@ -92,6 +102,8 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
         evidence: null,
         retrievalError: null,
         evidenceError: null,
+        ask: null,
+        askError: null,
       };
     case "set_page":
       return { ...state, page: Math.max(1, action.page) };
@@ -123,6 +135,12 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
       return { ...state, evidenceLoading: false, evidence: action.pack };
     case "evidence_error":
       return { ...state, evidenceLoading: false, evidenceError: action.error };
+    case "ask_start":
+      return { ...state, askLoading: true, askError: null };
+    case "ask_done":
+      return { ...state, askLoading: false, ask: action.result };
+    case "ask_error":
+      return { ...state, askLoading: false, askError: action.error };
     default:
       return state;
   }
@@ -143,6 +161,7 @@ interface WorkspaceApi {
   traceToSource: (t: TraceTarget) => void;
   runSearch: () => Promise<void>;
   assembleEvidence: (question: string) => Promise<void>;
+  ask: () => Promise<void>;
 }
 
 const WorkspaceContext = createContext<WorkspaceApi | null>(null);
@@ -213,6 +232,23 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  const askCallback = useCallback(async () => {
+    dispatch({ type: "ask_start" });
+    try {
+      const result = await api.ask({
+        query: state.query,
+        filters: {},
+        generation: {},
+      });
+      dispatch({ type: "ask_done", result });
+    } catch (e) {
+      dispatch({
+        type: "ask_error",
+        error: e instanceof Error ? e.message : String(e),
+      });
+    }
+  }, [state.query]);
+
   const value = useMemo<WorkspaceApi>(
     () => ({
       state,
@@ -223,8 +259,9 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       traceToSource,
       runSearch,
       assembleEvidence,
+      ask: askCallback,
     }),
-    [state, traceToSource, runSearch, assembleEvidence],
+    [state, traceToSource, runSearch, assembleEvidence, askCallback],
   );
 
   return (

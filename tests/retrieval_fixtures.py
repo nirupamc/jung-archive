@@ -73,7 +73,13 @@ class FakeVectorIndex:
             "embedding_dimension": len(self.rows[0]["embedding"]) if self.rows else 0,
             "normalized": True,
             "index_schema_version": "index-schema-1",
+            "chunking_config_version": "chunking-config-1",
         }
+
+    def collection_schema_meta(self):
+        from jung_archive.models.chunk import IndexSchemaMeta
+        raw = self.collection_metadata()
+        return IndexSchemaMeta.model_validate(raw)
 
     def load_state(self):
         return {"documents": {}}

@@ -1,4 +1,5 @@
 import type {
+  AskResponse,
   BlockOut,
   ChunkOut,
   DocumentSummary,
@@ -78,6 +79,15 @@ export const api = {
     method: "POST",
     body: JSON.stringify(body),
   }),
+  ask: (body: {
+    query: string;
+    filters?: Record<string, unknown>;
+    generation?: Record<string, unknown>;
+  }) =>
+    request<AskResponse>("/api/ask", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
   evaluationRuns: () =>
     request<import("./evaluations").EvalRunListItem[]>(
       "/api/evaluation/runs"),

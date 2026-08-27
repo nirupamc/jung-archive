@@ -190,3 +190,46 @@ export interface EvidencePack {
   skipped_oversized: SuppressedItem[];
   warnings: string[];
 }
+
+// ----------------------------------------------------------------------
+// ASK contracts (mirror backend generation/ask schemas)
+
+export interface CitationOut {
+  id: string;
+  evidence_id: string;
+  status: "valid" | "unknown" | "malformed";
+  note: string | null;
+}
+
+export interface AskResponse {
+  answer: string;
+  citations: CitationOut[];
+  evidence_pack: EvidencePack;
+  provider: string;
+  model: string;
+  local_or_remote: "LOCAL" | "REMOTE";
+  retrieval_metadata: {
+    mode: string;
+    top_k: number;
+    latency_ms: number | null;
+    results: number;
+    warnings: string[];
+  };
+  warnings: string[];
+}
+
+export interface SourceCard {
+  evidence_id: string;
+  document_id: string;
+  title: string | null;
+  author: string | null;
+  pages: string;
+  section: string | null;
+  excerpt: string;
+}
+
+export interface RetrievalTraceStage {
+  label: string;
+  count: number | null;
+  latency_ms: number | null;
+}

@@ -115,7 +115,7 @@ class HybridRetriever:
 
         warnings.extend(self._check_eligibility())
 
-         results: List[RetrievalResult] = []
+        results: List[RetrievalResult] = []
         try:
             if mode == "dense":
                 ranked, dense_err = self._dense_leg(

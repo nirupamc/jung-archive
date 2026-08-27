@@ -99,6 +99,13 @@ class TestDenseRetriever:
         with pytest.raises(IndexCompatibilityError):
             dr.search("anything", top_k=1)
 
+    def test_compatibility_passes_with_matching_metadata(self, corpus_chunks):
+        """When model and dimension match, compatibility validation must not raise."""
+        provider = HashProvider()
+        vi = build_fake_index(corpus_chunks, provider)
+        dr = DenseRetriever(vi)
+        dr.validate_compatibility()  # should not raise
+
     def test_empty_query_rejected(self, corpus_chunks):
         vi = build_fake_index(corpus_chunks, HashProvider())
         with pytest.raises(ValueError):
@@ -392,3 +399,59 @@ class TestHybridRetriever:
                                HybridRetrieverConfig(mode="hybrid"))
         with pytest.raises(RuntimeError):
             retr.search("shadow", top_k=3)
+
+    def test_dense_mode_raises_not_silent_zero(
+            self, tmp_path, corpus_chunks, synthetic_corpus):
+        """DENSE mode must raise RuntimeError when the dense leg fails —
+        it must NOT silently return 200 with 0 results and no warnings."""
+        statuses = {d.document_id: d.index_status.value
+                    for d, _ in synthetic_corpus}
+        vi = build_fake_index(corpus_chunks, HashProvider())
+        frozen = dict(vi.collection_metadata())
+        vi.collection_metadata = lambda: frozen
+
+        class WrongModel(HashProvider):
+            model_name = "wrong-model"
+
+        vi.provider = WrongModel()
+        bm25 = make_bm25(tmp_path, corpus_chunks, statuses=statuses)
+        retr = HybridRetriever(vi, bm25,
+                               HybridRetrieverConfig(mode="dense"))
+        with pytest.raises(RuntimeError, match="dense search failed"):
+            retr.search("shadow", top_k=3)
+
+    def test_hybrid_rerank_refuses_silent_fallback(
+            self, tmp_path, corpus_chunks, synthetic_corpus):
+        """hybrid_rerank mode must propagate dense-leg failure, not
+        silently fall back to lexical-only."""
+        from jung_archive.reranking.cross_encoder import (
+            LocalCrossEncoderReranker,
+        )
+        from jung_archive.retrieval.pipeline import (
+            RerankingPipeline,
+            RerankingPipelineConfig,
+        )
+
+        statuses = {d.document_id: d.index_status.value
+                    for d, _ in synthetic_corpus}
+        vi = build_fake_index(corpus_chunks, HashProvider())
+        frozen = dict(vi.collection_metadata())
+        vi.collection_metadata = lambda: frozen
+
+        class WrongModel(HashProvider):
+            model_name = "wrong-model"
+
+        vi.provider = WrongModel()
+        bm25 = make_bm25(tmp_path, corpus_chunks, statuses=statuses)
+        reranker = LocalCrossEncoderReranker()
+        pipe = RerankingPipeline(
+            vi, bm25, reranker,
+            RerankingPipelineConfig(fusion_candidate_k=10, rerank_top_k=5),
+        )
+        # RerankingPipeline runs the "hybrid" leg path, whose dense-leg
+        # failure is wrapped as "dense leg unavailable (...); refusing
+        # silent fallback to lexical-only" (not the single-leg "dense
+        # search failed" message). The key assertion: failure propagates
+        # as a loud RuntimeError rather than silently falling back.
+        with pytest.raises(RuntimeError, match="dense leg unavailable"):
+            pipe.search("shadow", top_k=3)

@@ -2,7 +2,7 @@
  * Deterministic fixtures mirroring the backend API contracts.
  */
 import type { BlockOut, ChunkOut, DocumentSummary, PageInspection } from "@/lib/types";
-import type { EvidencePack, RetrievalResponse, RetrievalResult } from "@/lib/types";
+import type { AskResponse, CitationOut, EvidencePack, RetrievalResponse, RetrievalResult } from "@/lib/types";
 
 export const DOC: DocumentSummary = {
   document_id: "381d2da4b68e",
@@ -245,3 +245,38 @@ export const EVIDENCE_PACK: EvidencePack = {
   skipped_oversized: [],
   warnings: [],
 };
+
+export const ASK_RESPONSE: AskResponse = {
+  answer:
+    "Jung treats the Self as a totality larger than the conscious ego [S1]. He also connects individuation with the integration of unconscious contents [S2].",
+  citations: [
+    {
+      id: "[S1]",
+      evidence_id: "S1",
+      status: "valid",
+      note: null,
+    },
+    {
+      id: "[S2]",
+      evidence_id: "S2",
+      status: "unknown",
+      note: "S2 not in evidence pack",
+    },
+  ],
+  evidence_pack: EVIDENCE_PACK,
+  provider: "openai_compatible",
+  model: "llama-3-8b-instruct",
+  local_or_remote: "REMOTE",
+  retrieval_metadata: {
+    mode: "hybrid",
+    top_k: 20,
+    latency_ms: 142.3,
+    results: 12,
+    warnings: [],
+  },
+  warnings: [
+    "generation provider is REMOTE; corpus evidence is being sent off-machine",
+    "generated answer references 1 unknown citation(s): S2",
+  ],
+};
+
