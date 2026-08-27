@@ -1,0 +1,56 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 14px 18px;
+  gap: 12px;
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg-sunken));
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.svg {
+  width: 220px;
+  height: 140px;
+  max-width: 72vw;
+  overflow: visible;
+}
+
+.node {
+  fill: #c8963e;
+  stroke: rgba(255, 220, 140, 0.22);
+  stroke-width: 0.5;
+}
+
+.centerNode {
+  fill: #e8c07a;
+  stroke: rgba(255, 235, 170, 0.45);
+  stroke-width: 0.9;
+  filter: drop-shadow(0 0 6px rgba(200, 150, 62, 0.35));
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+}
+
+.hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap { animation: none; }
+}

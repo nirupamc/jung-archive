@@ -8,7 +8,8 @@ __pycache__/
 dist/
 build/
 .eggs/
-
+data/chroma/
+git image/
 # Virtual environments
 .venv/
 venv/
@@ -31,6 +32,27 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Data
+# Secrets
+.env
+.env.local
+
+# Runtime logs
+uvicorn.log
+uvicorn.err
+*.log
+
+# Secrets / scratch
+test_nvidia.ps1
+
+# Frontend
+frontend/.next/
+frontend/node_modules/
+frontend/dist/
+frontend/out/
+
+# Data — keep index artifacts, ignore large derivates
 data/processed/
 data/diagnostics/
+data/evaluation/runs/
+data/experiments/
+data/chroma/*.log

@@ -9,6 +9,7 @@ Run:
     python -m uvicorn jung_archive.api.app:app --port 8000
 """
 import json
+import os
 import threading
 from functools import lru_cache
 from pathlib import Path
@@ -18,9 +19,12 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
-from jung_archive.api.schemas import (
+from jung_archive.api.ask_schemas import (
     AskRequest,
     AskResponse,
+    CitationOut,
+)
+from jung_archive.api.schemas import (
     BlockOut,
     ChunkOut,
     CorpusStats,
@@ -250,10 +254,18 @@ def run_ask(req: AskRequest):
 # ----------------------------------------------------------------------
 # App
 
+def _cors_origins() -> list[str]:
+    raw = os.environ.get("CORS_ORIGINS") or os.environ.get("FRONTEND_URL") or ""
+    extra = [o.strip() for o in raw.split(",") if o.strip()]
+    base = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    # Also allow NEXT_PUBLIC_API_BASE_URL host for sanity (not needed but harmless)
+    return base + extra
+
+
 app = FastAPI(title="Jung Archive Inspector API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=_cors_origins(),
     allow_methods=["*"],
     allow_headers=["*"],
 )

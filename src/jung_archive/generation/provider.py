@@ -5,10 +5,15 @@ only. No keys or secrets are ever exposed to frontend code.
 
 Environment variables (OpenAI-compatible provider):
     GENERATION_PROVIDER   = openai_compatible (default)
-    GENERATION_BASE_URL   = http://127.0.0.1:8080/v1
-    GENERATION_MODEL      = required
-    GENERATION_API_KEY    = optional; sent as Bearer if present
-    GENERATION_TIMEOUT    = 120 (seconds)
+    GENERATION_BASE_URL   = https://integrate.api.nvidia.com/v1 (default)
+    GENERATION_MODEL      = meta/llama-3.2-11b-vision-instruct (default)
+    GENERATION_API_KEY    = required for hosted providers; sent as Bearer
+    GENERATION_TIMEOUT    = 60 (seconds, default)
+
+NVIDIA NIM is just another OpenAI-compatible endpoint: the defaults above
+target it, but any OpenAI-compatible server (local llama.cpp, LM Studio,
+OpenRouter, ...) works by overriding the env vars. LOCAL/REMOTE is derived
+from the base URL only (127.0.0.1 / localhost / 0.0.0.0 => LOCAL).
 """
 from __future__ import annotations
 
@@ -18,6 +23,17 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
 import requests
+
+# Load .env at import time so GENERATION_* vars are available when
+# OpenAICompatibleProvider is instantiated via `uvicorn jung_archive.api.app:app`.
+# Uses python-dotenv's default (override=False) so explicit OS / PowerShell
+# env vars continue to take precedence over .env.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+except ImportError:
+    pass
 
 
 class GenerationError(RuntimeError):
@@ -64,11 +80,13 @@ class OpenAICompatibleProvider(GenerationProvider):
 
     def __init__(self):
         self.base_url = os.environ.get(
-            "GENERATION_BASE_URL", "http://127.0.0.1:8080/v1"
+            "GENERATION_BASE_URL", "https://integrate.api.nvidia.com/v1"
         ).rstrip("/")
-        self.model = os.environ.get("GENERATION_MODEL", "")
+        self.model = os.environ.get(
+            "GENERATION_MODEL", "meta/llama-3.2-11b-vision-instruct"
+        )
         self.api_key = os.environ.get("GENERATION_API_KEY", "")
-        self.timeout = int(os.environ.get("GENERATION_TIMEOUT", "120"))
+        self.timeout = int(os.environ.get("GENERATION_TIMEOUT", "60"))
         self._is_local = self._detect_local()
 
     def _detect_local(self) -> bool:
@@ -104,7 +122,8 @@ class OpenAICompatibleProvider(GenerationProvider):
             "model": self.model,
             "messages": messages,
             "temperature": kwargs.get("temperature", 0.2),
-            "max_tokens": kwargs.get("max_tokens", 1024),
+            "top_p": kwargs.get("top_p", 0.7),
+            "max_tokens": kwargs.get("max_tokens", 1200),
         }
 
         headers: Dict[str, str] = {"Content-Type": "application/json"}

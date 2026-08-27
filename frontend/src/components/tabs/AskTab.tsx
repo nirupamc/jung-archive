@@ -3,7 +3,29 @@
 import { useState } from "react";
 import { useWorkspace } from "@/state/workspace";
 import type { AskResponse, SourceCard } from "@/lib/types";
+import AskLoader from "../AskLoader";
 import styles from "./AskTab.module.css";
+
+function renderAnswer(text: string, onCiteClick: (id: string) => void) {
+  const parts = text.split(/(\[S\d+\])/g);
+  return parts.map((part, i) => {
+    const m = part.match(/^\[(S\d+)\]$/);
+    if (m) {
+      return (
+        <button
+          key={i}
+          type="button"
+          className={styles.citeLink}
+          onClick={() => onCiteClick(m[1])}
+          aria-label={`Jump to source ${m[1]}`}
+        >
+          {part}
+        </button>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
 
 function toSourceCards(resp: AskResponse): SourceCard[] {
   const byId = new Map<string, SourceCard>();
@@ -99,11 +121,24 @@ export default function AskTab() {
         </div>
       )}
 
-      {resp && (
+      {state.askLoading && (
+        <div className={styles.loadingWrap}>
+          <AskLoader />
+        </div>
+      )}
+
+      {resp && !state.askLoading && (
         <>
           <section className={styles.answerSection} data-testid="answer">
             <h3 className={styles.stageTitle}>ANSWER</h3>
-            <p className={styles.answerText}>{resp.answer}</p>
+            <p className={styles.answerText}>
+              {renderAnswer(resp.answer, (id) => {
+                const el = document.getElementById(`source-${id}`);
+                el?.scrollIntoView({ behavior: "smooth", block: "center" });
+                el?.classList.add(styles.flash);
+                setTimeout(() => el?.classList.remove(styles.flash), 900);
+              })}
+            </p>
           </section>
 
           {resp.citations.length > 0 && (
@@ -117,6 +152,7 @@ export default function AskTab() {
                   return (
                     <li
                       key={card.evidence_id}
+                      id={`source-${card.evidence_id}`}
                       className={styles.sourceCard}
                       data-testid={`source-${card.evidence_id}`}
                     >

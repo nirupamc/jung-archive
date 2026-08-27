@@ -1,6 +1,6 @@
 {
-  "corpus_fingerprint": "697564864631e8ae9ca755079117ef8417375594333bd5aeae7398a181d6afc4",
-  "chunk_count": 6084,
+  "corpus_fingerprint": "361b6d0952dbf888e82d27fc88c6e0e0464eca6954f962b1471432a1e555608b",
+  "chunk_count": 12666,
   "preprocessing_version": "lexical-v1",
   "schema_version": "bm25-schema-1"
 }
