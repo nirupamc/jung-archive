@@ -10,6 +10,7 @@ Run:
 """
 import json
 import os
+import re
 import threading
 from functools import lru_cache
 from pathlib import Path
@@ -82,6 +83,24 @@ def list_document_ids() -> List[str]:
     return sorted(p.stem for p in CHUNKS_DIR.glob("*.json"))
 
 
+def _section_from_source(source_type: str, source_path) -> str:
+    """Resolve the corpus lane (PRIMARY | SECONDARY) for a document summary.
+
+    Prefers the authoritative ``source_type`` recorded in the chunk/processed
+    artifact. As a fallback it scans the (possibly absolute, Windows or POSIX)
+    ``source_path`` for a ``primary``/``secondary`` segment, so listing works
+    even when discovery cannot run (e.g. Modal, where the source PDF folders
+    are absent). Anything else is reported as UNKNOWN.
+    """
+    if source_type in ("PRIMARY", "SECONDARY"):
+        return source_type
+    if source_path:
+        for part in re.split(r"[/\\]", str(source_path)):
+            if part.upper() in ("PRIMARY", "SECONDARY"):
+                return part.upper()
+    return "UNKNOWN"
+
+
 def document_summary(document_id: str) -> DocumentSummary:
     artifact = load_chunk_artifact_by_doc(document_id)
     processed = _load_processed(document_id)
@@ -107,8 +126,11 @@ def document_summary(document_id: str) -> DocumentSummary:
         has_pdf=pdf_ok,
         status="INDEXED" if indexed_ok else
                ("CHUNKED" if artifact is not None else "PROCESSED"),
-        section=str(source_path or "").split("/")[0].split("\\")[0].upper()
-        or "UNKNOWN",
+        section=_section_from_source(
+            doc_meta.get("source_type")
+            or (processed or {}).get("source_type") or "UNKNOWN",
+            source_path,
+        ),
         registered=True,
         sha256=(processed or {}).get("source_sha256")
         or doc_meta.get("source_sha256"),

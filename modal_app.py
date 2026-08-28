@@ -21,15 +21,23 @@ image = (
             "SENTENCE_TRANSFORMERS_HOME": HF_CACHE,
             "TOKENIZERS_PARALLELISM": "false",
             "OMP_NUM_THREADS": "1",
+            # Keep model download output ASCII-safe in the build container.
+            "HF_HUB_DISABLE_PROGRESS_BARS": "1",
+            "TQDM_DISABLE": "1",
+            "PYTHONIOENCODING": "utf-8",
             "JUNG_ARCHIVE_DATA_DIR": "/data",
         }
     )
     .run_commands(
+        # Bake models into the image. Output is redirected: transformers/HF
+        # print Unicode (checkmarks) that the build log stream can't encode,
+        # and the weights are cached into the image layer either way.
+        "TRANSFORMERS_VERBOSITY=error HF_HUB_VERBOSITY=error "
         "python -c \""
         "from sentence_transformers import SentenceTransformer, CrossEncoder; "
         "SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2'); "
         "CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')"
-        "\""
+        "\" > /dev/null 2>&1"
     )
 )
 
