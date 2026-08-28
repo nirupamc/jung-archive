@@ -33,12 +33,17 @@ from jung_archive.api.schemas import (
     PageInspection,
     SearchRequest,
 )
+from jung_archive.config import (
+    BM25_DIR,
+    CHROMA_DIR,
+    CHUNKS_DIR,
+    EVAL_DIR,
+    GRAPH_DIR,
+    PROCESSED_DIR,
+)
 from jung_archive.models.document import SourceType
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-PROCESSED_DIR = REPO_ROOT / "data" / "processed"
-CHUNKS_DIR = REPO_ROOT / "data" / "chunks"
-CHROMA_DIR = REPO_ROOT / "data" / "chroma"
 PRIMARY_DIR = REPO_ROOT / "primary"
 
 VALID_MODES = ("dense", "bm25", "hybrid", "hybrid_rerank")
@@ -199,9 +204,9 @@ def get_services():
             from jung_archive.retrieval.lexical import BM25Retriever
 
             provider = LocalSentenceTransformerProvider()
-            _vector_index = VectorIndex(provider, persist_dir="data/chroma")
+            _vector_index = VectorIndex(provider, persist_dir=str(CHROMA_DIR))
             _bm25 = BM25Retriever(chunks_dir=str(CHUNKS_DIR),
-                                  state_dir=str(REPO_ROOT / "data" / "bm25"))
+                                  state_dir=str(BM25_DIR))
         if _reranker is None:
             from jung_archive.reranking.cross_encoder import LocalCrossEncoderReranker
 
@@ -500,9 +505,6 @@ def ask(req: AskRequest):
 # ----------------------------------------------------------------------
 # Knowledge graph (M7, read-only)
 
-GRAPH_DIR = REPO_ROOT / "data" / "graph"
-
-
 def get_graph():
     from jung_archive.graph.build import load_graph
 
@@ -696,9 +698,6 @@ def graph_search_impl(q: str, limit: int = 10):
 
 # ----------------------------------------------------------------------
 # Evaluation Lab (M6, read-only)
-
-EVAL_DIR = REPO_ROOT / "data" / "evaluation"
-
 
 @app.get("/api/evaluation/runs")
 def evaluation_runs():

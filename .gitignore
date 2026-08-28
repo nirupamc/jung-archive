@@ -56,3 +56,8 @@ data/diagnostics/
 data/evaluation/runs/
 data/experiments/
 data/chroma/*.log
+  .kilo/
+        modal_app.py
+        scripts/
+        src/jung_archive/config.py
+        tests/test_modal.py

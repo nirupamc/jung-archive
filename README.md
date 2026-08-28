@@ -236,6 +236,71 @@ npm run lint ; npm run build
 
 Frontend → Vercel (Next.js), Backend → Fly.io / Render (FastAPI + Docker). See `Dockerfile` and `fly.toml` (Fly, `internal_port 8000`, `vm 2cpu/2048MB`). Backend bakes `data/chunks`, `data/chroma`, `data/bm25`, `data/graph` as read-only; `primary/` PDFs are excluded from the image. Set host secrets: `GENERATION_API_KEY`, `CORS_ORIGINS=https://<your-vercel>.vercel.app`. Frontend uses `NEXT_PUBLIC_API_BASE_URL` at build time.
 
+### Deploying the backend with Modal
+
+The backend can also be deployed to [Modal](https://modal.com) as a separate
+pathway. This reuses the **existing** FastAPI app (`jung_archive.api.app`) — it
+is served through Modal's ASGI integration; nothing in the app is forked.
+
+**Prerequisites**
+
+- `pip install modal`
+- `modal setup` (authenticate)
+
+**1. Create the Volume** (persisted, effectively read-only retrieval data):
+
+```
+modal volume create jung-archive-data
+```
+
+**2. Upload runtime artifacts** (repeatable; excludes PDFs/`.env`/diagnostics):
+
+```
+python scripts/upload_modal_data.py
+```
+
+This uploads `data/{chroma,bm25,chunks,graph,processed,evaluation}` into the
+volume. Source PDFs (`primary/`, `secondary/`) are intentionally excluded.
+
+**3. Create the Secret** (never commit keys; `.env` stays local-only):
+
+```
+modal secret create jung-archive-secrets \
+  GENERATION_API_KEY=<your-nvidia-nim-key> \
+  GENERATION_PROVIDER=openai_compatible \
+  GENERATION_BASE_URL=https://integrate.api.nvidia.com/v1 \
+  GENERATION_MODEL=meta/llama-3.2-11b-vision-instruct \
+  CORS_ORIGINS=https://<your-vercel>.vercel.app
+```
+
+**4. Deploy:**
+
+```
+modal deploy modal_app.py
+```
+
+The Modal image installs only runtime deps (FastAPI/uvicorn, Chroma, BM25,
+sentence-transformers, torch, cross-encoder reranker, OpenAI-compatible client)
+and **bakes the embedding + reranker models into the image** during build so
+cold starts don't re-download them. The app is CPU-only (2 vCPU / 4096 MiB).
+
+**5. Verify health:**
+
+```
+curl https://<your-modal-url>/api/health
+```
+
+**Data root / CORS**
+
+- The container sets `JUNG_ARCHIVE_DATA_DIR=/data` (the mounted volume). Locally
+  the same code defaults to `<repo>/data`, so local dev is unchanged.
+- CORS allows `http://localhost:3000` plus whatever `CORS_ORIGINS` you put in
+  the secret. `allow_origins=["*"]` is never used.
+- `GET /api/health`, `POST /api/ask`, and all read-only inspector/retrieval
+  endpoints are preserved; no second API surface is created.
+
+See `modal_app.py` and `scripts/upload_modal_data.py` for details.
+
 ## Document identity policy
 
 Folder location never grants trust. Unregistered documents are `index_status=REVIEW`; explicit decisions live in `config/document_metadata.json` (the Bookey "Aion" summary is registered EXCLUDE so it can never enter the index as Jung-authored material). Author/title filters are enforced against this registry.
