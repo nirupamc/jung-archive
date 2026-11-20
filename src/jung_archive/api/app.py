@@ -41,11 +41,18 @@ from jung_archive.config import (
     EVAL_DIR,
     GRAPH_DIR,
     PROCESSED_DIR,
+    get_pdf_dir,
+    resolve_pdf_path,
+    resolve_pdf,
+    get_pdf_path,
+    resolve_source_pdf,
+    pdf_path_for,
 )
 from jung_archive.models.document import SourceType
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PRIMARY_DIR = REPO_ROOT / "primary"
+PDF_DIR = get_pdf_dir()
 
 VALID_MODES = ("dense", "bm25", "hybrid", "hybrid_rerank")
 
@@ -110,7 +117,8 @@ def document_summary(document_id: str) -> DocumentSummary:
     page_count = (processed or {}).get("page_count") or doc_meta.get("page_count") or 0
     source_path = doc_meta.get("source_path") or \
         (processed or {}).get("source_path")
-    pdf_ok = bool(source_path) and (REPO_ROOT / source_path).exists()
+    pdf_path = resolve_pdf_path(source_path)
+    pdf_ok = pdf_path is not None
     index_state = load_index_state().get(document_id) or {}
     indexed_ok = bool(index_state.get("chunk_count")) and artifact is not None
     return DocumentSummary(
@@ -478,7 +486,9 @@ def document_pdf(document_id: str):
     summary = document_summary(document_id)
     if not summary.source_path or not summary.has_pdf:
         raise HTTPException(404, f"source PDF unavailable for {document_id!r}")
-    pdf_path = REPO_ROOT / summary.source_path
+    pdf_path = resolve_pdf_path(summary.source_path)
+    if pdf_path is None:
+        raise HTTPException(404, f"source PDF unavailable for {document_id!r}")
     return FileResponse(pdf_path, media_type="application/pdf",
                         filename=pdf_path.name)
 

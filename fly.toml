@@ -26,7 +26,7 @@ primary_region = "iad"
 [env]
   GENERATION_PROVIDER = "openai_compatible"
   GENERATION_BASE_URL = "https://integrate.api.nvidia.com/v1"
-  GENERATION_MODEL = "meta/llama-3.2-11b-vision-instruct"
+  GENERATION_MODEL = "nvidia/nemotron-3.5-bolt-e4b"
   GENERATION_TIMEOUT = "60"
 
 [deploy]

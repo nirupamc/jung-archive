@@ -6,7 +6,7 @@ only. No keys or secrets are ever exposed to frontend code.
 Environment variables (OpenAI-compatible provider):
     GENERATION_PROVIDER   = openai_compatible (default)
     GENERATION_BASE_URL   = https://integrate.api.nvidia.com/v1 (default)
-    GENERATION_MODEL      = meta/llama-3.2-11b-vision-instruct (default)
+    GENERATION_MODEL      = nvidia/nemotron-3.5-bolt-e4b (default)
     GENERATION_API_KEY    = required for hosted providers; sent as Bearer
     GENERATION_TIMEOUT    = 60 (seconds, default)
 
@@ -14,12 +14,23 @@ NVIDIA NIM is just another OpenAI-compatible endpoint: the defaults above
 target it, but any OpenAI-compatible server (local llama.cpp, LM Studio,
 OpenRouter, ...) works by overriding the env vars. LOCAL/REMOTE is derived
 from the base URL only (127.0.0.1 / localhost / 0.0.0.0 => LOCAL).
+
+Request shape (verified against NVIDIA NIM chat completions):
+    POST {base_url}/chat/completions
+    {model, messages, temperature, top_p, max_tokens}
+
+Streaming is deliberately not used: /api/ask returns one complete response,
+so the provider sends a single non-streaming request (`stream` is never set).
+NVIDIA-specific extras (chat_template_kwargs / enable_thinking) are not sent:
+they are model-specific reasoning switches, not portable OpenAI-compatible
+options, and the configured model does not require them.
 """
 from __future__ import annotations
 
 import os
 import time
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 import requests
@@ -34,6 +45,58 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+
+DEFAULT_GENERATION_BASE_URL = "https://integrate.api.nvidia.com/v1"
+# Default only applies when GENERATION_MODEL is not set; production overrides
+# it via the Modal secret / .env.
+DEFAULT_GENERATION_MODEL = "nvidia/nemotron-3.5-bolt-e4b"
+
+
+@dataclass(frozen=True)
+class GenerationConfig:
+    """Resolved generation configuration, shared by provider and smoke test."""
+
+    provider: str
+    base_url: str
+    model: str
+    api_key: str
+    timeout: int
+    config_source: str
+
+    @property
+    def is_local(self) -> bool:
+        base = self.base_url.lower()
+        return any(local in base for local in ["127.0.0.1", "localhost", "0.0.0.0"])
+
+
+def resolve_generation_config() -> GenerationConfig:
+    """Resolve generation settings the same way for provider and smoke test.
+
+    Reads ``.env`` (without overriding real process/OS variables) and then the
+    ``GENERATION_*`` environment variables. This is the single source of truth
+    so a smoke test cannot silently run against a different model than the
+    production provider.
+    """
+    source = "process environment (.env is loaded at provider import)"
+
+    raw_timeout = os.environ.get("GENERATION_TIMEOUT", "60")
+    try:
+        timeout = int(raw_timeout)
+    except (TypeError, ValueError):
+        timeout = 60
+
+    return GenerationConfig(
+        provider=os.environ.get("GENERATION_PROVIDER", "openai_compatible")
+        or "openai_compatible",
+        base_url=os.environ.get(
+            "GENERATION_BASE_URL", DEFAULT_GENERATION_BASE_URL
+        ).rstrip("/"),
+        model=os.environ.get("GENERATION_MODEL", DEFAULT_GENERATION_MODEL),
+        api_key=os.environ.get("GENERATION_API_KEY", ""),
+        timeout=timeout,
+        config_source=source,
+    )
 
 
 class GenerationError(RuntimeError):
@@ -79,14 +142,11 @@ class OpenAICompatibleProvider(GenerationProvider):
     provider_name = "openai_compatible"
 
     def __init__(self):
-        self.base_url = os.environ.get(
-            "GENERATION_BASE_URL", "https://integrate.api.nvidia.com/v1"
-        ).rstrip("/")
-        self.model = os.environ.get(
-            "GENERATION_MODEL", "meta/llama-3.2-11b-vision-instruct"
-        )
-        self.api_key = os.environ.get("GENERATION_API_KEY", "")
-        self.timeout = int(os.environ.get("GENERATION_TIMEOUT", "60"))
+        config = resolve_generation_config()
+        self.base_url = config.base_url
+        self.model = config.model
+        self.api_key = config.api_key
+        self.timeout = config.timeout
         self._is_local = self._detect_local()
 
     def _detect_local(self) -> bool:
@@ -149,9 +209,15 @@ class OpenAICompatibleProvider(GenerationProvider):
 
         if resp.status_code == 401:
             raise GenerationError("generation endpoint rejected credentials (401)")
+        if resp.status_code == 403:
+            raise GenerationError("generation endpoint forbidden (403)")
         if resp.status_code == 404:
             raise GenerationError(
                 f"model '{self.model}' not found at {self.base_url} (404)"
+            )
+        if resp.status_code == 410:
+            raise GenerationError(
+                f"model '{self.model}' is no longer available at {self.base_url} (410)"
             )
         if resp.status_code == 429:
             raise GenerationError("generation endpoint rate-limited (429)")
@@ -175,6 +241,11 @@ class OpenAICompatibleProvider(GenerationProvider):
             raise GenerationError(
                 "malformed generation response: missing choices[0].message.content"
             ) from exc
+
+        if not isinstance(text, str) or not text.strip():
+            raise GenerationError(
+                "malformed generation response: empty assistant content"
+            )
 
         usage = body.get("usage", {})
         return GenerationResult(

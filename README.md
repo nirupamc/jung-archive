@@ -22,7 +22,7 @@ Jung Archive is a local-first document intelligence and evidence-backed research
 - Evaluation Lab: 30-question grounded benchmark on *The Undiscovered Self*, run-vs-run deltas
 - Evidence-backed knowledge graph (conservative rules, TRUSTED/WEAK/UNVERIFIED)
 - ASK / RAG: `Question → Hybrid Retrieval → RRF → Reranking → EvidencePack → LLM → Citation Validation`
-- OpenAI-compatible generation (NVIDIA NIM by default, e.g. `meta/llama-3.2-11b-vision-instruct`)
+- OpenAI-compatible generation (NVIDIA NIM by default, `nvidia/nemotron-3.5-bolt-e4b`)
 - Source trace: one click from any citation or graph edge to the highlighted PDF region
 
 ## Interface / Product Tour
@@ -201,7 +201,7 @@ Environment (see `.env.example`):
 ```
 GENERATION_PROVIDER=openai_compatible
 GENERATION_BASE_URL=https://integrate.api.nvidia.com/v1
-GENERATION_MODEL=meta/llama-3.2-11b-vision-instruct
+GENERATION_MODEL=nvidia/nemotron-3.5-bolt-e4b
 GENERATION_API_KEY=   # set in .env or host secrets, never committed
 GENERATION_TIMEOUT=60
 CORS_ORIGINS=http://localhost:3000
@@ -269,7 +269,7 @@ modal secret create jung-archive-secrets \
   GENERATION_API_KEY=<your-nvidia-nim-key> \
   GENERATION_PROVIDER=openai_compatible \
   GENERATION_BASE_URL=https://integrate.api.nvidia.com/v1 \
-  GENERATION_MODEL=meta/llama-3.2-11b-vision-instruct \
+  GENERATION_MODEL=nvidia/nemotron-3.5-bolt-e4b \
   CORS_ORIGINS=https://<your-vercel>.vercel.app
 ```
 

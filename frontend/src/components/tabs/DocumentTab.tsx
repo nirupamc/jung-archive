@@ -14,6 +14,12 @@ export default function DocumentTab() {
   const [fitMode, setFitMode] = useState<FitMode>("width");
   const [showOverlays, setShowOverlays] = useState(true);
   const docId = state.documentId;
+  // PDF load failures are tracked per document id, so switching to another
+  // document does not inherit a previous document's failure (and returning to
+  // the failed document still shows its fallback).
+  const [pdfFailedDocIds, setPdfFailedDocIds] = useState<ReadonlySet<string>>(
+    () => new Set<string>(),
+  );
 
   const [loaded, setLoaded] = useState<{
     key: string;
@@ -46,9 +52,12 @@ export default function DocumentTab() {
     return <div className={styles.placeholder}>no document selected</div>;
   }
 
-  const pageCount = state.documents?.find((d) => d.document_id === docId)
-    ?.page_count ?? 1;
+  const selectedDocument = state.documents?.find((d) => d.document_id === docId);
+  const pageCount = selectedDocument?.page_count ?? 1;
+  const hasPdf = selectedDocument?.has_pdf ?? false;
+  const pdfFailed = pdfFailedDocIds.has(docId);
   const selectedSet = new Set(state.selectedBlockIds);
+  const pdfUrl = api.pdfUrl(docId);
 
   return (
     <div className={styles.wrap}>
@@ -158,32 +167,52 @@ export default function DocumentTab() {
       )}
 
       <div className={styles.viewerArea}>
-        <PdfViewer
-          pdfUrl={api.pdfUrl(docId)}
-          pageNumber={state.page}
-          zoom={zoom}
-          fitMode={fitMode}
-          pageWidthPt={pageData?.width ?? 360}
-          pageHeightPt={pageData?.height ?? 576}
-        >
-          {(scale) =>
-            showOverlays && pageData ? (
-              <BlockOverlays
-                blocks={pageData.blocks}
-                scale={scale}
-                selectedIds={state.selectedBlockIds}
-                onSelect={(b) =>
-                  dispatch({
-                    type: "select_blocks",
-                    ids: selectedSet.has(b.block_id)
-                      ? state.selectedBlockIds.filter((x) => x !== b.block_id)
-                      : [...state.selectedBlockIds, b.block_id],
-                  })
-                }
-              />
-            ) : null
-          }
-        </PdfViewer>
+        {hasPdf ? (
+          pdfFailed ? (
+            <div className={styles.pdfFallback}>
+              Original source PDF is not available in this deployment. Extracted document content and analysis remain available.
+            </div>
+          ) : (
+            <PdfViewer
+              pdfUrl={pdfUrl}
+              pageNumber={state.page}
+              zoom={zoom}
+              fitMode={fitMode}
+              pageWidthPt={pageData?.width ?? 360}
+              pageHeightPt={pageData?.height ?? 576}
+              onLoadError={() =>
+                setPdfFailedDocIds((prev) => {
+                  if (prev.has(docId)) return prev;
+                  const next = new Set(prev);
+                  next.add(docId);
+                  return next;
+                })
+              }
+            >
+              {(scale) =>
+                showOverlays && pageData ? (
+                  <BlockOverlays
+                    blocks={pageData.blocks}
+                    scale={scale}
+                    selectedIds={state.selectedBlockIds}
+                    onSelect={(b) =>
+                      dispatch({
+                        type: "select_blocks",
+                        ids: selectedSet.has(b.block_id)
+                          ? state.selectedBlockIds.filter((x) => x !== b.block_id)
+                          : [...state.selectedBlockIds, b.block_id],
+                      })
+                    }
+                  />
+                ) : null
+              }
+            </PdfViewer>
+          )
+        ) : (
+          <div className={styles.pdfFallback}>
+            Original source PDF is not available in this deployment. Extracted document content and analysis remain available.
+          </div>
+        )}
       </div>
     </div>
   );

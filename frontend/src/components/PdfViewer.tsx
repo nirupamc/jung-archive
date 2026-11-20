@@ -17,6 +17,7 @@ interface PdfViewerProps {
   pageWidthPt: number;
   pageHeightPt: number;
   children: (scale: number) => React.ReactNode;
+  onLoadError?: (error: Error) => void;
 }
 
 export default function PdfViewer({
@@ -27,6 +28,7 @@ export default function PdfViewer({
   pageWidthPt,
   pageHeightPt,
   children,
+  onLoadError,
 }: PdfViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -50,9 +52,12 @@ export default function PdfViewer({
     const task = pdfjs.getDocument({ url: pdfUrl });
     task.promise
       .then((doc) => !cancelled && setDocState({ url: pdfUrl, doc }))
-      .catch((e: Error) =>
-        !cancelled && setDocState({ url: pdfUrl, error: `PDF load failed: ${e.message}` }),
-      );
+      .catch((e: Error) => {
+        if (!cancelled) {
+          setDocState({ url: pdfUrl, error: `PDF load failed: ${e.message}` });
+          onLoadError?.(e);
+        }
+      });
     return () => {
       cancelled = true;
       task.destroy();
